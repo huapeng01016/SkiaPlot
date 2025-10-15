@@ -15,12 +15,16 @@ SKIA_LIB_DIR := $(SKIA_DIR)/out/Release
 SKIA_LIBS := -L$(SKIA_LIB_DIR) -lskia
 
 # System libraries
+# Note: For Windows builds, use CMake or Visual Studio instead of this Makefile
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     SYS_LIBS := -lpthread -lfontconfig -lfreetype -lGL
 endif
 ifeq ($(UNAME_S),Darwin)
     SYS_LIBS := -framework CoreFoundation -framework CoreGraphics -framework CoreText -framework OpenGL
+endif
+ifeq ($(OS),Windows_NT)
+    $(error Windows is not supported with this Makefile. Please use CMake instead.)
 endif
 
 LIBS := $(SKIA_LIBS) $(SYS_LIBS)
@@ -69,6 +73,11 @@ help:
 	@echo "  make examples  - Build all examples"
 	@echo "  make clean     - Remove build artifacts"
 	@echo "  make help      - Show this help message"
+	@echo ""
+	@echo "Platform Support:"
+	@echo "  - Linux: Fully supported"
+	@echo "  - macOS: Fully supported"
+	@echo "  - Windows: Not supported (use CMake instead)"
 	@echo ""
 	@echo "Requirements:"
 	@echo "  - Set SKIA_DIR environment variable"
